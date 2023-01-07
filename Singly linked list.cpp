@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include<string.h>
-#include<iostream>
 
 using namespace std;
 
@@ -23,12 +22,12 @@ student_record *head=NULL;
 void menu_for_linked_list();
 void menu_for_insertion();
 void add_to_the_front();
-void add_to_the_middle();
+void add_anywhere();
 void add_to_the_end();
 void display_students();
 void menu_for_deletion();
 void delete_from_the_front();
-void delete_from_the_middle();
+void delete_anywhere();
 void delete_from_the_end();
 void search_for_student();
 
@@ -72,7 +71,7 @@ void menu_for_linked_list(){
 void menu_for_insertion(){
     int choice;
     cout<<"1. Add to the front"<<endl;
-    cout<<"2. Add to the middle"<<endl;
+    cout<<"2. Add anywhere"<<endl;
     cout<<"3. Add to the end"<<endl;
     cout<<"4. Exit"<<endl;
     cout<<"\nInput your choice:";
@@ -82,7 +81,7 @@ void menu_for_insertion(){
             add_to_the_front();
             break;
         case 2:
-            add_to_the_middle();
+            add_anywhere();
             break;
         case 3:
             add_to_the_end();
@@ -118,7 +117,7 @@ void add_to_the_front(){
         head->next=temp2;
     }
 }
-void add_to_the_middle(){
+void add_anywhere(){
     student_record *temp1=new student_record;
     cout<<"Enter the name of the student: ";
     cin.ignore();
@@ -147,29 +146,22 @@ void add_to_the_middle(){
     first:
         cin>>index;
         
-        if (index>counter) {
+        if (index>counter || index<1) {
             cout<<"Please Enter again!\n";
             goto first;
         } else {
-            cout<<"Do you want to insert before the index or after the index?(Press 1 for Before the index\Press 2 for after the index): ";
-            int choice_2;
-            cin>>choice_2;
-            if (choice_2==1) {
-                index--;
+            if (index==1) {
+                temp1->next=head;
+                head=temp1;
             }
-            temp2=head;
-            int i=1;
-            while (temp2->next!=NULL &&i<index) {
-                temp2=temp2->next;
-                if (i==index) {
-                    break;
+            else{
+                temp2=head;
+                for (int i=2; i<index; i++) {
+                    temp2=temp2->next;
                 }
-                i++;
+                temp1->next=temp2->next;
+                temp2->next=temp1;
             }
-            temp1->next=temp2->next;
-            temp2->next=temp1;
-            
-            
         }
     }
 }
@@ -212,48 +204,132 @@ void display_students(){
     }
 }
 void menu_for_deletion(){
-    cout<<"Coming Soon!!"<<endl;
+    int choice;
+    cout<<"1. Delete from the front"<<endl;
+    cout<<"2. Delet anywhere"<<endl;
+    cout<<"3. Delete at the end"<<endl;
+    cout<<"4. Exit"<<endl;
+    cout<<"\nInput your choice:";
+    cin>>choice;
+    switch (choice) {
+        case 1:
+            delete_from_the_front();
+            break;
+        case 2:
+            delete_anywhere();
+            break;
+        case 3:
+            delete_from_the_end();
+            break;
+        case 4:
+            break;
+        default:
+            cout<<"Please enter appropriate Input!!"<<endl;
+            menu_for_deletion();
+            break;
+    }
 }
 void delete_from_the_front(){
-    cout<<"Coming Soon!!"<<endl;
+    student_record *temp;
+    temp=head;
+    head=head->next;
+    delete temp;
+    cout<<"The record at the front is successfully deleted!!\n"<<endl;
+    
 }
-void delete_from_the_middle(){
-    cout<<"Coming Soon!!"<<endl;
-}
-void delete_from_the_end(){
-    cout<<"Coming Soon!!"<<endl;
-}
-void search_for_student(){
+void delete_anywhere(){
     char temp_name[20];
-    cout<<"Enter the name of the student you want to find: ";
+    cout<<"Enter the name of the student you want to delete: ";
     cin.ignore();
     cin.getline(temp_name, 20);
     student_record *temp;
     temp=head;
     if (strncasecmp(temp_name, temp->name, 25)==0) {
-        cout<<"The record is found!"<<endl;
-        cout<<"Name: "<<temp->name<<endl;
-        cout<<"Id: "<<temp->id<<"\n";
-        cout<<"Age: "<<temp->age<<"\n";
-        cout<<"Department: "<<temp->department<<endl;
+        cout<<"The record is succesfully deleted!\n"<<endl;
+        head=head->next;
+        delete temp;
     } else {
         int found=0;
-        while (strncasecmp(temp_name, temp->name, 25)!=0) {
+        student_record *temp2;
+        temp2=temp;
+        while (strncasecmp(temp_name, temp->name, strlen(temp_name))!=0) {
+            temp2=temp;
             temp=temp->next;
             if (strncasecmp(temp_name, temp->name, strlen(temp_name))==0){
                 found=1;
             }
+            
         }
         if (found==1) {
+            cout<<"The record is succesfully deleted!\n"<<endl;
+            temp2->next=NULL;
+            delete temp;
+        } else {
+            cout<<"The record is not found!!"<<endl;
+        }
+        }
+        
+}
+void delete_from_the_end(){
+    student_record *temp;
+    if (head->next==NULL) {
+        temp=head;
+        head=head->next;
+        cout<<"The record is succesfully deleted!\n"<<endl;
+        delete temp;
+    } else {
+        student_record *temp2;
+        temp2=head;
+        temp=head;
+        while (temp2->next!=NULL) {
+            temp=temp2;
+            temp2=temp2->next;
+        }
+        temp->next=NULL;
+        //temp=temp2;
+        cout<<"The record is succesfully deleted!\n"<<endl;
+        delete temp2;
+    }
+}
+void search_for_student(){
+    char temp_name[20];
+    if(head!=NULL){
+        cout<<"Enter the name of the student you want to find: ";
+        cin.ignore();
+        cin.getline(temp_name, 20);
+        student_record *temp;
+        temp=head;
+        if (strcasecmp(temp_name, temp->name)==0 ) {
             cout<<"The record is found!"<<endl;
             cout<<"Name: "<<temp->name<<endl;
             cout<<"Id: "<<temp->id<<"\n";
             cout<<"Age: "<<temp->age<<"\n";
             cout<<"Department: "<<temp->department<<endl;
         } else {
-            cout<<"The record is not found!!"<<endl;
+            
+            int found=0;
+            while (temp->next!=NULL) {
+                temp=temp->next;
+                if (strcasecmp(temp_name, temp->name)==0){
+                    found=1;
+                    break;
+                }
+            }
+            if (found==1) {
+                cout<<"The record is found!"<<endl;
+                cout<<"Name: "<<temp->name<<endl;
+                cout<<"Id: "<<temp->id<<"\n";
+                cout<<"Age: "<<temp->age<<"\n";
+                cout<<"Department: "<<temp->department<<endl;
+            } else {
+                cout<<"The record is not found!!"<<endl;
+            }
+            
         }
         
     }
+    else
+        cout<<"the record is empty!!"<<endl;
+    
    
 }
