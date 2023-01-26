@@ -1,22 +1,22 @@
-#include<iostream>
+//Array based stack implementation
+#include <iostream>
 using namespace std;
 
-struct Stack{
+struct stack_implementation{
     int data;
-    Stack *next;
+    stack_implementation *next;
 };
-Stack *top=NULL;
+
+stack_implementation *top=NULL;
 
 void main_menu();
-void push(int number);
-int pop();
-void peek();
-void display();
-void make_empty();
-bool is_full();
 bool is_emptyy();
-int getSize();
-
+void display();
+int peek();
+void push(int number);
+void pop();
+void make_empty();
+int get_size();
 
 int main(){
     main_menu();
@@ -25,101 +25,54 @@ int main(){
 }
 void main_menu(){
     int choice;
+    int number;
     do {
-        cout<<endl<<endl<<endl;
-        cout<<"WELCOME TO STACK IMPLEMENTATION USING LINKED LIST!!"<<endl;
-        cout<<"1. PUSH ELEMENT TO STACK"<<endl;
-        cout<<"2. DISPLAY ALL ELEMENT OF STACK"<<endl;
-        cout<<"3. POP ELEMENT FROM STACK"<<endl;
-        cout<<"4. PEEK TO AN ELEMENT FROM THE STACK"<<endl;
-        cout<<"5. MAKE THE STACK EMPTY"<<endl;
-        cout<<"6. FIND THE SIZE OF THE STACK"<<endl;
-        cout<<"7. EXIT"<<endl;
-        cout<<"PLEASE INPUT YOUR CHOICE: ";
+        cout<<"1. Push an element to the stack"<<endl;
+        cout<<"2. Pop an element to the stack"<<endl;
+        cout<<"3. Display all element from the stack"<<endl;
+        cout<<"4. Peek the top element of the stack"<<endl;
+        cout<<"5. Make the stack empty"<<endl;
+        cout<<"6. Get the size of the stack"<<endl;
+        cout<<"7. Exit"<<endl;
+        cout<<"Input you choice: ";
         cin>>choice;
         switch (choice) {
             case 1:
-                int number;
-                cout<<"ENTER THE NUMBER YOU WANT TO PUSH TO THE STACK: ";
+                cout<<"Enter a number: ";
                 cin>>number;
                 push(number);
-                cout<<endl<<endl<<endl;
                 break;
             case 2:
-                display();
-                cout<<endl<<endl<<endl;
+                pop();
                 break;
             case 3:
-                pop();
-                cout<<endl<<endl<<endl;
+                display();
                 break;
             case 4:
-                peek();
-                cout<<endl<<endl<<endl;
+                if (is_emptyy()) {
+                    cout<<"No element to peek!!"<<endl;
+                } else {
+                    cout<<"The top element from the stack is "<<peek()<<endl;;
+                }
                 break;
             case 5:
                 make_empty();
-                cout<<endl<<endl<<endl;
                 break;
             case 6:
-                cout<<"THE SIZE OF THE STACK IS: "<<getSize();
-                cout<<endl<<endl<<endl;
+                if (is_emptyy()) {
+                    cout<<"The stack is empty!!"<<endl;
+                } else {
+                    cout<<"The size of the stack is "<<get_size()<<endl;;
+                }
                 break;
-                
             default:
+                cout<<"Please enter appropriate value!!"<<endl;
+                main_menu();
                 break;
         }
-        
+
     } while (choice!=7);
 }
-void push(int number){
-    Stack *temp=new Stack;
-    temp->data=number;
-    temp->next=NULL;
-    if (top==NULL) {
-        top=temp;
-        top->next=NULL;
-    } else {
-        temp->next=top;
-        top=temp;
-    }
-}
-int pop(){
-    if (is_emptyy()!=true) {
-        Stack *temp;
-        temp=top;
-        top=top->next;
-        int number=temp->data;
-        delete temp;
-        return number;
-        
-    } else {
-        cout<<"STACK UNDERFLOW!!"<<endl;
-        return 0;
-    }
-  
-}
-void peek(){
-    if (is_emptyy()!=true) {
-        cout<<"ELEMENT AT TOP IS "<<top->data<<endl;
-    } else {
-        cout<<"NO ELEMENT TO PEEK"<<endl;
-    }
-}
-void display(){
-    if (is_emptyy()!=true) {
-        while (is_emptyy()!=true) {
-            cout<<pop()<<"  ";
-        }
-    } else {
-        cout<<"STACK IS EMPTY"<<endl;
-    }
-}
-void make_empty(){
-    top=NULL;
-    cout<<"STACK IS NOW EMPTY!!"<<endl;
-}
-
 bool is_emptyy(){
     if (top==NULL) {
         return true;
@@ -127,13 +80,57 @@ bool is_emptyy(){
         return false;
     }
 }
-int getSize(){
-    int counter=1;
-    Stack *temp;
-    temp=top;
+
+void display(){
+    if (is_emptyy()) {
+        cout<<"The stack is empty,no element to display!!"<<endl;
+    } else {
+        cout<<"The elements in the stack are: ";
+        stack_implementation *temp=top;
+        while (temp!=NULL) {
+            cout<<temp->data<<" ";
+            temp=temp->next;
+        }
+        cout<<endl;
+    }
+}
+int peek(){
+    return top->data;
+}
+void push(int number){
+    stack_implementation *temp=new stack_implementation;
+    temp->data=number;
+    temp->next=NULL;
+    if (top==NULL) {
+        top=temp;
+    } else {
+        temp->next=top;
+        top=temp;
+    }
+}
+void pop(){
+    if (is_emptyy()) {
+        cout<<"Stack Underflow!!"<<endl;
+    } else {
+        stack_implementation *temp=top;
+        top=top->next;
+        delete temp;
+    }
+}
+void make_empty(){
+    if (is_emptyy()) {
+        cout<<"The stack is currently empty!!"<<endl;
+    } else {
+        top=NULL;
+    }
+}
+int get_size(){
+    int counter=0;
+    stack_implementation *temp=top;
     while (temp!=NULL) {
-        temp=temp->next;
         counter++;
+        temp=temp->next;
     }
     return counter;
 }
+
